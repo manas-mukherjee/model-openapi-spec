@@ -1,0 +1,104 @@
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    InputData:
+      properties:
+        age:
+          title: Age
+          type: integer
+        credit_score:
+          title: Credit Score
+          type: integer
+        entity_id:
+          example: ssn123
+          title: Entity Id
+          type: string
+          x-intuit_annotation:
+            description: The unique identifier of the for this input
+            entity_identifier: true
+            required: true
+            unique: true
+        income:
+          title: Income
+          type: integer
+      required:
+      - entity_id
+      - age
+      - income
+      - credit_score
+      title: InputData
+      type: object
+    OutputData:
+      properties:
+        prediction:
+          title: Prediction
+          type: integer
+          x-intuit_annotation:
+            description: This is the prediction class
+        prediction_proba:
+          title: Prediction Proba
+          type: number
+      required:
+      - prediction
+      - prediction_proba
+      title: OutputData
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+info:
+  title: My ML model prediction API
+  version: 1.0.0
+openapi: 3.0.2
+paths:
+  /predict:
+    post:
+      operationId: predict_predict_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputData'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutputData'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Predict
+      x-model-assetid: 12345abcde67890
+      x-model-versionid: '1.1'
